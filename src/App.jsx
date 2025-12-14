@@ -6,52 +6,67 @@ function App() {
   const [studies, setStudies] = useState(initialStudies);
   const [filter, setFilter] = useState("all");
 
-
   function markAsCompleted(id) {
     setStudies(
-      filteredStudies.map((study) =>
+      studies.map((study) =>
         study.id === id
           ? { ...study, completed: true }
           : study
       )
     );
   }
-  const filteredStudies = studies.filter((study) => {
-  if (filter === "completed") return study.completed;
-  if (filter === "pending") return !study.completed;
-  return true;
-});
-  const completedCount = studies.filter(
-  (study) => study.completed
-).length;
 
-const pendingCount = studies.filter(
-  (study) => !study.completed
-).length;
-   
+  const filteredStudies = studies.filter((study) => {
+    if (filter === "completed") return study.completed;
+    if (filter === "pending") return !study.completed;
+    return true;
+  });
+
+  const completedCount = studies.filter(
+    (study) => study.completed
+  ).length;
+
+  const pendingCount = studies.filter(
+    (study) => !study.completed
+  ).length;
+
   return (
     <div style={styles.page}>
       <h1>Dashboard de Estudos</h1>
-      <div style={styles.filters}>
-  <button style={filter === "all" ? activeButton : button} onClick={() => setFilter("all")}>
-    Todos
-  </button>
-  <button style={filter === "pending" ? activeButton : button} onClick={() => setFilter("pending")}>
-    Pendentes
-  </button>
-  <button style={filter === "completed" ? activeButton : button} onClick={() => setFilter("completed")}>
-    Estudados
-  </button>
-</div>
 
-      <div style={styles.counters}>
-  <span>📘 Pendentes: {pendingCount}</span>
-  <span>✅ Estudados: {completedCount}</span>
+      {/* FILTROS */}
+      <div style={styles.filters}>
+        <button
+          style={filter === "all" ? activeButton : button}
+          onClick={() => setFilter("all")}
+        >
+          Todos
+        </button>
+
+        <button
+          style={filter === "pending" ? activeButton : button}
+          onClick={() => setFilter("pending")}
+        >
+          Pendentes
+        </button>
+
+        <button
+          style={filter === "completed" ? activeButton : button}
+          onClick={() => setFilter("completed")}
+        >
+          Estudados
+        </button>
       </div>
 
+      {/* CONTADORES */}
+      <div style={styles.counters}>
+        <span>📘 Pendentes: {pendingCount}</span>
+        <span>✅ Estudados: {completedCount}</span>
+      </div>
 
+      {/* LISTA */}
       <ul style={styles.list}>
-        {studies.map((study) => (
+        {filteredStudies.map((study) => (
           <StudyCard
             key={study.id}
             study={study}
@@ -91,8 +106,8 @@ const styles = {
     padding: 0,
     listStyle: "none",
   },
-  
 };
+
 const button = {
   padding: "8px 16px",
   borderRadius: "8px",
